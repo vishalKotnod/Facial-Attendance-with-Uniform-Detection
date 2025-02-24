@@ -1,0 +1,96 @@
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+    135deg,
+    #427243,
+    #83a04a
+  ); /* Updated color theme */
+  color: #ffffff;
+  text-align: center;
+}
+
+/* Card-style container */
+.container {
+  display: flex;
+  flex-direction: column; /* Ensures children stack vertically */
+  align-items: center; /* Centers elements horizontally */
+  justify-content: center; /* Centers elements vertically */
+  gap: 20px; /* Space between elements */
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  max-width: 600px;
+  width: 900px;
+  height: 700px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Header styles */
+h1 {
+  font-size: 26px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-family: "Noto Sans", sans-serif;
+  color: #d6e2c4;
+  margin-bottom: 30px;
+}
+
+/* Video element styling */
+video {
+  width: 580px;
+  max-width: 600px;
+  border-radius: 15px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Button styling */
+button {
+  width: 580px;
+  height: 50px;
+  padding: 12px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+  background: linear-gradient(90deg, #335b3b, #1c3d19);
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(90deg, #5a8c3f, #2d6b27);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  video {
+    width: 100%;
+    height: auto;
+  }
+
+  button {
+    width: 180px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+}

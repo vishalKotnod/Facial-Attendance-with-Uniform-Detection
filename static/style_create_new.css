@@ -1,0 +1,132 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #427243, #83a04a);
+  color: #fff;
+  text-align: center;
+}
+.register-container {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  width: 600px;
+  height: 900px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  font-family: "Arial", sans-serif;
+  color: #e9e9cc;
+}
+
+.input-group {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 15px;
+  font-weight: 100;
+  color: black;
+}
+
+label {
+  font-size: 16px;
+  font-weight: 800;
+  color: black;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+  color: rgb(17, 17, 17);
+  font-size: 16px;
+  outline: none;
+}
+
+input:focus {
+  border-color: #e7e7cd;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+  background: linear-gradient(90deg, #335b3b, #1c3d19);
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+button:hover {
+  transform: scale(1.06);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+}
+
+.video-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+video {
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  height: 350px;
+  width: 520px;
+}
+
+#image-count {
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #e7e7cd;
+}
+
+#status {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #ffefb7;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Logo Styling */
+.loginlogo {
+  width: 120px; /* Adjust size as needed */
+  height: auto;
+  margin-bottom: 20px;
+  filter: brightness(0) saturate(100%) invert(28%) sepia(60%) saturate(450%)
+    hue-rotate(80deg) brightness(50%) contrast(110%);
+}

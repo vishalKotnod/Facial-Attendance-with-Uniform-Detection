@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register Student</title>
+    <link rel="stylesheet" href="/static/style_create_new.css" />
+  </head>
+  <body>
+    <div class="register-container">
+      <img src="/static/loginlogo.png" alt="loginLogo" class="loginlogo" />
+
+      <h1>Register New Student</h1>
+
+      <form id="register-form">
+        <div class="input-group">
+          <label for="name">Name:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter Name"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <label for="student_id">Student ID:</label>
+          <input
+            type="text"
+            id="student_id"
+            name="student_id"
+            placeholder="Enter Student ID"
+            required
+          />
+        </div>
+
+        <button type="button" id="startCapture">Start Capture</button>
+      </form>
+
+      <!-- Video Preview -->
+      <div class="video-container">
+        <video id="video" width="320" height="240" autoplay></video>
+      </div>
+
+      <!-- Capture Button -->
+      <button id="capture" style="display: none">Capture Photo</button>
+
+      <!-- Image Count -->
+      <p id="image-count">Captured Images: <span>0</span>/10</p>
+
+      <!-- Status Message -->
+      <div id="status"></div>
+    </div>
+
+    <script>
+      const video = document.getElementById("video");
+      const captureButton = document.getElementById("capture");
+      const imageCount = document.querySelector("#image-count span");
+      const statusDiv = document.getElementById("status");
+      let imgCount = 0;
+
+      document
+        .getElementById("startCapture")
+        .addEventListener("click", function () {
+          const name = document.getElementById("name").value;
+          const student_id = document.getElementById("student_id").value;
+
+          if (!name || !student_id) {
+            statusDiv.innerHTML = "Please fill out the name and student ID.";
+            return;
+          }
+
+          if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices
+              .getUserMedia({ video: true })
+              .then(function (stream) {
+                video.srcObject = stream;
+                video.play();
+                captureButton.style.display = "block";
+              });
+          }
+        });
+
+      captureButton.addEventListener("click", function () {
+        if (imgCount < 10) {
+          const canvas = document.createElement("canvas");
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          canvas.getContext("2d").drawImage(video, 0, 0);
+
+          canvas.toBlob(function (blob) {
+            const formData = new FormData();
+            formData.append("name", document.getElementById("name").value);
+            formData.append(
+              "student_id",
+              document.getElementById("student_id").value
+            );
+            formData.append("image", blob);
+
+            fetch("/save_image", {
+              method: "POST",
+              body: formData,
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  imgCount++;
+                  imageCount.textContent = imgCount;
+                  if (imgCount >= 10) {
+                    statusDiv.innerHTML =
+                      "Captured 10 images. Registration complete!";
+                    captureButton.disabled = true;
+                    setTimeout(() => {
+                      window.location.href = "/";
+                    }, 3000);
+                  }
+                } else {
+                  statusDiv.innerHTML =
+                    "Error capturing image. Please try again.";
+                }
+              });
+          });
+        }
+      });
+    </script>
+  </body>
+</html

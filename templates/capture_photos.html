@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Capture Photos</title>
+  </head>
+  <body>
+    <h1>Capture Photos for {{ name }}</h1>
+    <video id="video" width="500" height="400" autoplay></video>
+    <br />
+    <button id="capture">Capture Photo</button>
+    <button id="complete" style="display: none">Complete Registration</button>
+    <h2>Captured Images</h2>
+    <div id="captured-images" style="display: flex; flex-wrap: wrap"></div>
+    <div id="status"></div>
+
+    <script>
+      const video = document.getElementById("video");
+      const capturedImagesDiv = document.getElementById("captured-images");
+      const statusDiv = document.getElementById("status");
+      const completeButton = document.getElementById("complete");
+      let imgCount = 0; // Initialize image count
+
+      // Access the device camera and stream to the video element
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices
+          .getUserMedia({ video: true })
+          .then(function (stream) {
+            video.srcObject = stream;
+            video.play();
+          });
+      }
+
+      // Capture the image
+      document.getElementById("capture").addEventListener("click", function () {
+        if (imgCount < 10) {
+          // Limit to 10 images
+          const canvas = document.createElement("canvas");
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          canvas.getContext("2d").drawImage(video, 0, 0);
+
+          // Send the image to the backend
+          canvas.toBlob(function (blob) {
+            const formData = new FormData();
+            formData.append("name", "{{ name }}");
+            formData.append("student_id", "{{ student_id }}");
+            formData.append("image", blob);
+
+            fetch("/save_image", {
+              method: "POST",
+              body: formData,
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  // Create an image element to display the captured image
+                  const img = document.createElement("img");
+                  img.src = data.image_url; // URL of the captured image
+                  img.width = 160; // Set width for display
+                  img.style.margin = "5px"; // Space between images
+                  capturedImagesDiv.appendChild(img);
+
+                  imgCount++; // Increment the image count
+
+                  // Check if 10 images have been captured
+                  if (imgCount >= 10) {
+                    statusDiv.innerHTML = "Photo capture completed!";
+                    completeButton.style.display = "block"; // Show complete button
+                    document.getElementById("capture").disabled = true; // Disable capture button
+                  }
+                }
+              });
+          });
+        }
+      });
+
+      // Complete registration and redirect to attendance
+      completeButton.addEventListener("click", function () {
+        window.location.href = "/attendance"; // Redirect to attendance page
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mark Attendance</title>
+    <link rel="stylesheet" href="/static/style_mark_attendance.css" />
+  </head>
+  <body style="color: red">
+    <div class="container">
+      <h1>Mark Attendance for {{ name }}</h1>
+      <video id="video" autoplay></video>
+      <button id="capture">Capture Photo</button>
+      <button id="complete" style="display: none">Complete Attendance</button>
+      <div id="status"></div>
+    </div>
+
+    <script>
+      const video = document.getElementById("video");
+      const completeButton = document.getElementById("complete");
+      const statusDiv = document.getElementById("status");
+
+      // Access the device camera and stream to the video element
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices
+          .getUserMedia({ video: true })
+          .then(function (stream) {
+            video.srcObject = stream;
+            video.play();
+          });
+      }
+
+      // Capture the image
+      document.getElementById("capture").addEventListener("click", function () {
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext("2d").drawImage(video, 0, 0);
+
+        // Send the image to the backend
+        canvas.toBlob(function (blob) {
+          const formData = new FormData();
+          formData.append("name", "{{ name }}");
+          formData.append("student_id", "{{ student_id }}");
+          formData.append("image", blob);
+
+          fetch("/save_image", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                statusDiv.innerHTML = "Attendance marked successfully!";
+                completeButton.style.display = "block"; // Show complete button
+              }
+            });
+        });
+      });
+
+      // Complete attendance and redirect to home
+      completeButton.addEventListener("click", function () {
+        window.location.href = "/"; // Redirect to home page
+      });
+    </script>
+  </body>
+</html>

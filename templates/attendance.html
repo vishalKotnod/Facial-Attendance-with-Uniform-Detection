@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="/static/style_mark_attendance.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <!-- Video element for the webcam feed -->
+    <div class="container">
+      <h1>Mark Attendance</h1>
+      <video id="video" autoplay></video>
+      <button id="capture">Capture Photo</button>
+    </div>
+
+    <script>
+      // Access the webcam
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then(function (stream) {
+          const video = document.getElementById("video");
+          video.srcObject = stream;
+        })
+        .catch(function (err) {
+          console.error("Error accessing webcam: " + err);
+        });
+
+      document.getElementById("capture").onclick = function () {
+        const video = document.getElementById("video");
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const context = canvas.getContext("2d");
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Convert the canvas to a data URL (base64 string)
+        const imageData = canvas.toDataURL("image/jpeg");
+
+        // Send the captured image to the server
+        fetch("/attendance", {
+          method: "POST",
+          body: JSON.stringify({ image: imageData }), // Send image data
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            alert(data.message); // Show message to user
+          })
+          .catch((error) => console.error("Error:", error));
+      };
+    </script>
+  </body>
+</html>
